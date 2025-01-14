@@ -1,9 +1,9 @@
-# LaTeX-to-HTML API
+# Convectra
 
-![LaTeX-to-HTML API](https://img.shields.io/badge/LaTeX--to--HTML-API-green.svg)
+![Convectra](https://img.shields.io/badge/Convectra-API-green.svg)
 ![License](https://img.shields.io/badge/license-MIT-blue.svg)
 
-**LaTeX-to-HTML API** is a lightweight, Dockerized API designed to seamlessly convert LaTeX expressions into HTML using Bun, TypeScript, Zod for validation, and KaTeX for rendering. Whether you're integrating mathematical expressions into your web applications or automating document processing, LaTeX-to-HTML API provides a robust and scalable solution.
+**Convectra** is a lightweight, Dockerized API providing essential conversion functionalities, including LaTeX to HTML and HTML to Image conversion. Built with Bun, TypeScript, and Zod for validation, Convectra offers a streamlined solution for integrating these conversions into your applications.
 
 ## Table of Contents
 
@@ -17,19 +17,20 @@
   - [Using Docker](#using-docker-1)
   - [Using Docker Compose](#using-docker-compose-1)
 - [API Documentation](#api-documentation)
-  - [POST `/render`](#post-render)
+  - [POST `/api/v1/latex-html`](#post-apiv1latex-html)
+  - [POST `/api/v1/html-image`](#post-apiv1html-image)
 - [Testing the API](#testing-the-api)
 - [License](#license)
 
 ## Features
 
 - **LaTeX to HTML Conversion:** Easily convert LaTeX strings to HTML using KaTeX.
+- **HTML to Image Conversion:** Convert HTML content to images (PNG, JPEG, WebP).
 - **TypeScript & Bun:** Built with TypeScript for type safety and Bun for blazing-fast performance.
 - **Validation with Zod:** Robust input validation ensures reliable and secure API interactions.
 - **Dockerized:** Simplify deployment with a ready-to-use Docker image.
-- **API Versioning:** Organized routing with a versioned API prefix (`/api/v1`), facilitating future expansions.
 - **Environment Configuration:** Customize server ports and other settings using environment variables.
-- **Optional Rendering Options:** Customize the rendering process with optional parameters.
+- **Optional Conversion Options:** Customize the conversion processes with optional parameters.
 
 ## Prerequisites
 
@@ -41,7 +42,7 @@ Before you begin, ensure you have met the following requirements:
   ```bash
   docker-compose --version
   ```
-  
+
 - **Bun:** Although Docker handles the runtime, having Bun installed locally can be beneficial for development. Install Bun by following the instructions on the [official website](https://bun.sh/).
 
 ## Installation
@@ -51,8 +52,8 @@ Before you begin, ensure you have met the following requirements:
 1. **Clone the Repository**
 
    ```bash
-   git clone https://github.com/yourusername/latex-to-html.git
-   cd latex-to-html
+   git clone https://github.com/yourusername/convectra.git
+   cd convectra
    ```
 
 2. **Build the Docker Image**
@@ -60,10 +61,10 @@ Before you begin, ensure you have met the following requirements:
    Execute the following command in the root directory of the project to build the Docker image:
 
    ```bash
-   docker build -t latex-to-html .
+   docker build -t convectra .
    ```
 
-   - `-t latex-to-html`: Tags the image with the name `latex-to-html`.
+   - `-t convectra`: Tags the image with the name `convectra`.
    - `.`: Specifies the current directory as the build context.
 
 ### Using Docker Compose
@@ -71,8 +72,8 @@ Before you begin, ensure you have met the following requirements:
 1. **Clone the Repository**
 
    ```bash
-   git clone https://github.com/yourusername/latex-to-html.git
-   cd latex-to-html
+   git clone https://github.com/yourusername/convectra.git
+   cd convectra
    ```
 
 2. **Build and Run with Docker Compose**
@@ -117,20 +118,20 @@ After building the Docker image and configuring the environment variables, you c
 #### Running with Default Port
 
 ```bash
-docker run -d -p 3000:3000 --name latex-to-html latex-to-html
+docker run -d -p 3000:3000 --name convectra convectra
 ```
 
 - `-d`: Runs the container in detached mode.
 - `-p 3000:3000`: Maps port `3000` of the host to port `3000` of the container.
-- `--name latex-to-html`: Names the container `latex-to-html`.
-- `latex-to-html`: Specifies the Docker image to run.
+- `--name convectra`: Names the container `convectra`.
+- `convectra`: Specifies the Docker image to run.
 
 #### Running with a Custom Port
 
 If you want the server to run on a different port on your host machine, you can map it accordingly and set the `PORT` environment variable.
 
 ```bash
-docker run -d -p 4000:4000 --name latex-to-html -e PORT=4000 latex-to-html
+docker run -d -p 4000:4000 --name convectra -e PORT=4000 convectra
 ```
 
 - `-p 4000:4000`: Maps port `4000` of the host to port `4000` of the container.
@@ -276,6 +277,84 @@ docker-compose up -d
   }
   ```
 
+### POST `/api/v1/html-image`
+
+**Description:** Converts an HTML string into an image.
+
+**Request:**
+
+- **Method:** POST
+- **URL:** `/api/v1/html-image`
+- **Headers:**
+  - `Content-Type: application/json`
+- **Body:**
+
+  ```json
+  {
+    "html": "<div style='background-color: red; width: 100px; height: 100px;'>Hello</div>",
+    "options": {
+      "width": 200,
+      "height": 200,
+      "backgroundColor": "white",
+      "mimeType": "image/png"
+    },
+    "download": false,
+    "filename": "my-image"
+  }
+  ```
+
+  **Parameters:**
+
+  - `html` (string, required): The HTML string to be converted.
+  - `options` (object, optional): Optional parameters to configure the image conversion.
+    ```typescript
+    interface HtmlToImageOptions {
+      width?: number;
+      height?: number;
+      style?: any; // Allows any CSS style object
+      backgroundColor?: string;
+      canvasWidth?: number;
+      canvasHeight?: number;
+      quality?: number; // For JPEG/WebP (0-1)
+      pixelRatio?: number;
+      foreignObjectRendering?: 'auto' | 'user';
+      imagePlaceholder?: string;
+      mimeType?: 'image/png' | 'image/jpeg' | 'image/webp';
+    }
+    ```
+  - `download` (boolean, optional): If `true`, the response will trigger a download. Defaults to `false`.
+  - `filename` (string, optional): The filename for the download, if `download` is `true`.
+
+**Response:**
+
+- **Status:** `200 OK`
+- **Body:** The image data as a binary stream with the `Content-Type` corresponding to the requested `mimeType` (default is `image/png`). If `download` is `true`, the `Content-Disposition` header will be set.
+
+**Error Responses:**
+
+- **400 Bad Request:** Invalid JSON or input fails validation.
+
+  ```json
+  {
+    "error": "Invalid JSON"
+  }
+  ```
+
+  ```json
+  {
+    "error": "Invalid input",
+    "details": [/* validation error details */]
+  }
+  ```
+
+- **500 Internal Server Error:** Failed to convert HTML to image.
+
+  ```json
+  {
+    "error": "Failed to convert HTML to image"
+  }
+  ```
+
 ## Testing the API
 
 You can test the API endpoint using tools like `curl`, [Postman](https://www.postman.com/), or [Insomnia](https://insomnia.rest/).
@@ -308,7 +387,7 @@ curl -X POST http://localhost:3000/api/v1/latex-html \
 
 **Note:** The exact content of the `html` field depends on the KaTeX rendering.
 
-#### 2. Testing with Optional Parameters
+#### 2. Testing with Optional Parameters for LaTeX-to-HTML
 
 You can customize the rendering by providing optional parameters.
 
@@ -335,6 +414,55 @@ curl -X POST http://localhost:3000/api/v1/latex-html \
 }
 ```
 
+#### 3. Testing `/api/v1/html-image`
+
+**Request:**
+
+```bash
+curl -X POST http://localhost:3000/api/v1/html-image \
+  -H "Content-Type: application/json" \
+  -d '{
+        "html": "<div style=\"background-color: blue; width: 50px; height: 50px;\"></div>",
+        "options": {
+          "mimeType": "image/png"
+        }
+      }'
+```
+
+**Expected Response:** A PNG image. Since `curl` is in the terminal, the image data will likely be binary gibberish in your terminal. To save the image, you can redirect the output to a file:
+
+```bash
+curl -X POST http://localhost:3000/api/v1/html-image \
+  -H "Content-Type: application/json" \
+  -d '{
+        "html": "<div style=\"background-color: blue; width: 50px; height: 50px;\"></div>",
+        "options": {
+          "mimeType": "image/png"
+        }
+      }' > output.png
+```
+
+#### 4. Testing `/api/v1/html-image` with Download
+
+**Request:**
+
+```bash
+curl -X POST http://localhost:3000/api/v1/html-image \
+  -H "Content-Type: application/json" \
+  -d '{
+        "html": "<h1>Downloadable Image</h1>",
+        "options": {
+          "backgroundColor": "lightgray",
+          "mimeType": "image/jpeg",
+          "quality": 0.9
+        },
+        "download": true,
+        "filename": "downloadable-image"
+      }' -o downloadable-image.jpg
+```
+
+**Expected Response:** This command will download an image named `downloadable-image.jpg` containing the rendered HTML. The `-o` flag in `curl` specifies the output filename.
+
 ## Building and Running the Docker Container
 
 ### Building the Docker Image
@@ -342,7 +470,7 @@ curl -X POST http://localhost:3000/api/v1/latex-html \
 Navigate to the root directory of your project and build the Docker image:
 
 ```bash
-docker build -t latex-to-html .
+docker build -t convectra .
 ```
 
 ### Running the Docker Container
@@ -350,7 +478,7 @@ docker build -t latex-to-html .
 #### Running with Default Configuration
 
 ```bash
-docker run -d -p 3000:3000 --name latex-to-html latex-to-html
+docker run -d -p 3000:3000 --name convectra convectra
 ```
 
 #### Running with Custom Port
@@ -367,13 +495,13 @@ To run the server on port `4000` on your host machine:
 2. **Rebuild the Docker Image**
 
    ```bash
-   docker build -t latex-to-html .
+   docker build -t convectra .
    ```
 
 3. **Run the Container with Custom Port**
 
    ```bash
-   docker run -d -p 4000:4000 --name latex-to-html -e PORT=4000 latex-to-html
+   docker run -d -p 4000:4000 --name convectra -e PORT=4000 convectra
    ```
 
 **Explanation:**
@@ -414,4 +542,4 @@ This project is licensed under the [MIT License](LICENSE).
 
 ---
 
-Thank you for choosing **LaTeX-to-HTML API**! I hope it serves your needs effectively. If you have any questions or need further assistance, please don't hesitate to reach out.
+Thank you for choosing **Convectra**! I hope it serves your needs effectively. If you have any questions or need further assistance, please don't hesitate to reach out.
