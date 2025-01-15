@@ -5,5 +5,11 @@
 run:
 	bun run index.ts
 
-dbuild:
+drun:
 	docker compose up
+
+dbuild:
+	docker compose up --build
+
+ddown:
+	docker compose down
