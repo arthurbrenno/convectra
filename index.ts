@@ -5,8 +5,7 @@ import type { HTTPMethod, Route } from "./types/router"; // Importação de tipo
 
 const API_PREFIX = "/api/v1";
 
-// const PORT = Number(Bun.env["PORT"]) || 3000;
-const PORT = 3000;
+const PORT = Number(Bun.env["PORT"]) || 3000;
 
 const routes: Route[] = [
   {
