@@ -10,7 +10,7 @@
   },
   "scripts": {
     "tests": "echo testing",
-    "build": "bun build ./index.tsx --outdir ./build"
+    "build": "bun build ./index.ts --outdir ./build"
   },
   "dependencies": {
     "dotenv": "^16.4.7",
