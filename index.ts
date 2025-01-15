@@ -1,7 +1,6 @@
 // server.ts
 import { serve } from "bun";
 import { renderLatexHandler } from "./routes/latex_html";
-import { htmlToImageHandler } from "./routes/html_image"
 import type { HTTPMethod, Route } from "./types/router"; // Importação de tipos com 'import type'
 
 const API_PREFIX = "/api/v1";
@@ -14,11 +13,6 @@ const routes: Route[] = [
     path: "/latex-html",
     handler: renderLatexHandler,
   },
-  {
-    method: "POST",
-    path: "/html-image",
-    handler: htmlToImageHandler,
-  }
 ];
 
 const findRoute = (method: string, pathname: string): Route | undefined => {
