@@ -4,3 +4,6 @@
 
 run:
 	bun run index.ts
+
+dbuild:
+	docker compose up

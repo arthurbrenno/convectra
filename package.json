@@ -1,5 +1,5 @@
 {
-  "name": "katex_api_container",
+  "name": "convectra",
   "module": "index.ts",
   "type": "module",
   "devDependencies": {
@@ -7,6 +7,10 @@
   },
   "peerDependencies": {
     "typescript": "^5.0.0"
+  },
+  "scripts": {
+    "tests": "echo testing",
+    "build": "bun build ./index.tsx --outdir ./build"
   },
   "dependencies": {
     "dotenv": "^16.4.7",
