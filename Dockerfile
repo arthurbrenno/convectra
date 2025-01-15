@@ -22,18 +22,19 @@ COPY --from=install /temp/dev/node_modules node_modules
 COPY . .
 
 ENV NODE_ENV=production
-# RUN bun run tests  # You can re-enable this if tests are passing now
-RUN bun run build
+RUN bun run tests
+RUN bun run build --target=bun
 
 # copy production dependencies and source code into final image
 FROM base AS release
 COPY --from=install /temp/prod/node_modules node_modules
-COPY --from=prerelease /usr/src/app/build/index.js index.js  # Copy the *built* file
-COPY --from=prerelease /usr/src/app/package.json package.json # Ensure package.json is in the final stage
+COPY --from=prerelease /usr/src/app/index.ts .
+COPY --from=prerelease /usr/src/app/routes ./routes
+COPY --from=prerelease /usr/src/app/package.json .
 
 ENV PORT=3000
 
 # run the app
 USER bun
 EXPOSE 3000/tcp
-ENTRYPOINT [ "bun", "run", "index.js" ] # Run the *built* file
+ENTRYPOINT [ "bun", "run", "index.ts" ]

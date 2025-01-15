@@ -5,7 +5,8 @@ import type { HTTPMethod, Route } from "./types/router"; // Importação de tipo
 
 const API_PREFIX = "/api/v1";
 
-const PORT = Number(Bun.env["PORT"]) || 3000;
+// const PORT = Number(Bun.env["PORT"]) || 3000;
+const PORT = 3000;
 
 const routes: Route[] = [
   {
@@ -59,4 +60,4 @@ serve({
   },
 });
 
-console.log(`Server running or http://localhost:${PORT}`);
+console.log(`Server running or http://0.0.0.0:${PORT}`);

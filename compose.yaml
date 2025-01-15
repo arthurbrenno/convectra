@@ -1,7 +1,7 @@
 services:
-  latex-to-html:
+  math-utils:
     build: .
-    container_name: latex-to-html
+    container_name: math-utils
     ports:
       - "${PORT:-3000}:3000"
     environment:

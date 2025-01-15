@@ -1,9 +1,9 @@
-# Convectra
+# MathUtils
 
-![Convectra](https://img.shields.io/badge/Convectra-API-green.svg)
+![MathUtils](https://img.shields.io/badge/MathUtils-API-green.svg)
 ![License](https://img.shields.io/badge/license-MIT-blue.svg)
 
-**Convectra** is a lightweight, Dockerized API providing essential conversion functionalities, including LaTeX to HTML and HTML to Image conversion. Built with Bun, TypeScript, and Zod for validation, Convectra offers a streamlined solution for integrating these conversions into your applications.
+**MathUtils** is a lightweight, Dockerized API providing essential conversion functionalities, including LaTeX to HTML conversion. Built with Bun, TypeScript, and Zod for validation, MathUtils offers a streamlined solution for integrating these conversions into your applications.
 
 ## Table of Contents
 
@@ -542,4 +542,4 @@ This project is licensed under the [MIT License](LICENSE).
 
 ---
 
-Thank you for choosing **Convectra**! I hope it serves your needs effectively. If you have any questions or need further assistance, please don't hesitate to reach out.
+Thank you for choosing **MathUtils**! I hope it serves your needs effectively. If you have any questions or need further assistance, please don't hesitate to reach out.
